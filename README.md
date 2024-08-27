@@ -45,6 +45,7 @@ These rules collectively define how many points should be awarded to a receipt.
 10. Receipt id -> score mapping is stored simply on the server. This made testing easier. In the real world this would likely better fit into a cached database or a queue depending on purpose.
 11. I implemented some basic tests. Given more time I'd put more energy in feeding tests from example json files and running parsing edge cases through testing.
     I did run a fuzz tester against the endpoint with no crashes or 500s, just 400/404s.
+12. I used the chi router for no particular reason except that it was the intersection of the awesome compose template and the oapi-generator template.
 
 ## Build and Deploy
 
