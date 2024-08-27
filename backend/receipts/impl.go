@@ -67,7 +67,7 @@ func (s Server) PostReceiptsProcess(w http.ResponseWriter, r *http.Request) {
 	s.Points[id.String()] = score
 
 	resp := PostReceiptsProcessResponse{Id: id.String()}
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(resp)
 }
 
