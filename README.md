@@ -21,7 +21,7 @@ These rules collectively define how many points should be awarded to a receipt.
 6. 6 points if the day in the purchase date is odd.
 7. 10 points if the time of purchase is after 2:00pm and before 4:00pm.
 
-### Implementation Notes
+## Implementation Notes
 
 1. I used [oapi-codegen](https://github.com/oapi-codegen/oapi-codegen) for code generation of the basic types from the api.yml rather than manual creation. This is built into the build process automatically and works from a fresh clone. In a production environment it would require some additional futzing to configure it to handle updates to api.yml gracefully.
 2. Rules #2 and #3 could be simplified because if a total is a round dollar amount it is a multiple of 0.25. Howver, I think that would be a mistake because it would cause other difficulties in verifying non round dollar amount multiples of 0.25. It would also be more difficult if either rule changes because they would need to be untangled from each other.
