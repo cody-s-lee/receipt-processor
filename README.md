@@ -44,6 +44,7 @@ These rules collectively define how many points should be awarded to a receipt.
 9. Receipt id generation uses UUID v1 because it guarantees no collisions in tradeoff of locking generation. For a real system I would more deeply consider the tradeoff of locking during UUID generation versus ensuring no collisions.
 10. Receipt id -> score mapping is stored simply on the server. This made testing easier. In the real world this would likely better fit into a cached database or a queue depending on purpose.
 11. I implemented some basic tests. Given more time I'd put more energy in feeding tests from example json files and running parsing edge cases through testing.
+    I did run a fuzz tester against the endpoint with no crashes or 500s, just 400/404s.
 
 ## Build and Deploy
 
