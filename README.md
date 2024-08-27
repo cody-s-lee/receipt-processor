@@ -2,8 +2,6 @@
 
 An implementation of the Fetch Receipt Processor Challenge
 
-_Based on awesome-compose's `nginx-golang`_
-
 ## Instructions
 
 > Build a webservice that fulfils the documented API. The API is described below. A formal definition is provided in the
@@ -25,24 +23,21 @@ These rules collectively define how many points should be awarded to a receipt.
 
 ## Build and Deploy
 
+_Based on awesome-compose's `nginx-golang`_
+
 The compose file defines an application with two services `proxy` and `backend`.
-When deploying the application, docker compose maps port 80 of the frontend service container to the same port of the
-host as specified in the file.
+When deploying the application, docker compose maps port 80 of the frontend service container to the same port of the host as specified in the file.
 Make sure port 80 on the host is not already in use.
 
 ## Deploy with docker compose
 
 ```
-$ docker compose up -d
-Creating network "nginx-golang_default" with the default driver
-Building backend
-Step 1/7 : FROM golang:1.13 AS build
-1.13: Pulling from library/golang
+λ docker compose up -d
 ...
-Successfully built 4b24f27138cc
-Successfully tagged nginx-golang_proxy:latest
-Creating nginx-golang_backend_1 ... done
-Creating nginx-golang_proxy_1 ... done
+[+] Running 3/3
+ ✔ Network receipt-processor_default      Created                                                                0.0s
+ ✔ Container receipt-processor-backend-1  Started                                                                0.2s
+ ✔ Container receipt-processor-proxy-1    Started                                                                0.3s
 ```
 
 ## Expected result
@@ -50,28 +45,39 @@ Creating nginx-golang_proxy_1 ... done
 Listing containers must show two containers running and the port mapping as below:
 
 ```
-$ docker compose ps
-NAME                     COMMAND                  SERVICE             STATUS              PORTS
-nginx-golang-backend-1   "/code/bin/backend"      backend             running
-nginx-golang-proxy-1     "/docker-entrypoint.…"   proxy               running             0.0.0.0:80->80/tcp
+λ docker compose ps
+NAME                          IMAGE                       COMMAND                  SERVICE   CREATED          STATUS          PORTS
+receipt-processor-backend-1   receipt-processor-backend   "/code/bin/backend"      backend   47 seconds ago   Up 46 seconds
+receipt-processor-proxy-1     nginx                       "/docker-entrypoint.…"   proxy     47 seconds ago   Up 46 seconds   0.0.0.0:80->80/tcp
 ```
 
-After the application starts, navigate to `http://localhost:80` in your web browser or run:
+After the application starts, test via curl:
 
 ```
-$ curl localhost:80
-
-          ##         .
-    ## ## ##        ==
- ## ## ## ## ##    ===
-/"""""""""""""""""\___/ ===
-{                       /  ===-
-\______ O           __/
- \    \         __/
-  \____\_______/
-
-
-Hello from Docker!
+$ curl -XPOST localhost:80/receipts/process -d '{
+  "retailer": "M&M Corner Market",
+  "purchaseDate": "2022-03-20",
+  "purchaseTime": "14:33",
+  "items": [
+    {
+      "shortDescription": "Gatorade",
+      "price": "2.25"
+    },{
+      "shortDescription": "Gatorade",
+      "price": "2.25"
+    },{
+      "shortDescription": "Gatorade",
+      "price": "2.25"
+    },{
+      "shortDescription": "Gatorade",
+      "price": "2.25"
+    }
+  ],
+  "total": "9.00"
+}'
+{"id":"80ca0306-642b-11ef-939f-0242ac120002"}
+$ curl localhost:80/receipts/80ca0306-642b-11ef-939f-0242ac120002/points
+{"points":109}
 ```
 
 Stop and remove the containers
