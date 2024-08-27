@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=../configuration-schema.json
+package: receipts
+output: receipts.gen.go
+generate:
+  models: true
+  chi-server: true

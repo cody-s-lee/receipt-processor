@@ -1,38 +1,27 @@
 package main
 
 import (
-	"fmt"
+	"github.com/cody-s-lee/receipt-processor/backend/receipts"
 	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(
-		w, `
-          ##         .
-    ## ## ##        ==
- ## ## ## ## ##    ===
-/"""""""""""""""""\___/ ===
-{                       /  ===-
-\______ O           __/
- \    \         __/
-  \____\_______/
-
-	
-Hello from Docker!
-
-`,
-	)
-}
-
 func main() {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Get("/", handler)
+	// create a type that satisfies the `receipts.ServerInterface`, which contains an implementation of every operation from the generated code
+	server := receipts.NewServer()
 
-	fmt.Println("Go backend started!")
-	log.Fatal(http.ListenAndServe(":80", r))
+	r := chi.NewMux()
+
+	// get an `http.Handler` that we can use
+	h := receipts.HandlerFromMux(server, r)
+
+	s := &http.Server{
+		Handler: h,
+		Addr:    "0.0.0.0:80",
+	}
+
+	// And we serve HTTP until the world ends.
+	log.Fatal(s.ListenAndServe())
 }
